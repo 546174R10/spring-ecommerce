@@ -11,6 +11,9 @@ import com.curso.ecommerce.model.Producto;
 import com.curso.ecommerce.model.Usuario;
 import com.curso.ecommerce.service.ProductoService;
 
+import org.springframework.ui.Model;
+
+
 @Controller
 @RequestMapping("/productos")
 public class ProductoController {
@@ -21,14 +24,15 @@ public class ProductoController {
 	private ProductoService productoService;
 	
 	@GetMapping("")
-	public String show() {
-	return "productos/show";
+	public String show(Model model) {
+	  model.addAttribute("productos",productoService.findAll());
+		return "productos/show";
 }
 	@GetMapping("/create")
 public String create() {
 	return "productos/create";
 }
-	@PostMapping("/save") 
+	@PostMapping("/save")  
 	public String save (Producto producto ) {
 	LOGGER.info("Objeto de la vista {}",producto);
 	productoService.save(producto); 
