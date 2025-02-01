@@ -1,9 +1,12 @@
 package com.curso.ecommerce.controller;
 
+import java.util.Optional;
+
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -42,4 +45,24 @@ public String create() {
 	return"redirect:/productos";
 
 	}
+    
+	//redireccionamiento para editar un producto// 
+	@GetMapping("/edit/{id}")
+	public String edit(@PathVariable("id") Integer id, Model model) {
+	   Producto producto= new Producto();
+		Optional<Producto> optionalProducto=productoService.get(id);
+		producto= optionalProducto.get();
+		
+		LOGGER.info("producto buscado:{}",producto );
+		model.addAttribute("producto", producto);
+		
+		return "productos/edit";
+	}
+	
+	@PostMapping("/update")
+	public  String update(Producto productro) {
+		productoService.update(productro);
+		return "redirect:/productos";
+	}
+
 }
