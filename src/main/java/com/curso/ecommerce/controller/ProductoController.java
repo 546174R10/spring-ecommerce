@@ -64,5 +64,12 @@ public String create() {
 		productoService.update(productro);
 		return "redirect:/productos";
 	}
+	//Agregamos mapeo para el direccionamiento
+	@GetMapping( "/delete/{id}")
+	//creamos un nuevo metodo publico con mapeo 
+   public String delete(@PathVariable Integer id) {
+	   productoService.delete(id);
+	   return"redirect:/productos";
+   }   
 
 }
