@@ -29,7 +29,8 @@ public class ProductoController {
 	
 	@Autowired
 	private ProductoService productoService;
-	
+
+	//creacion de objeto upload para guardar imagen y llamar la clase anterior
 	@Autowired
 	private UploadFileService upload;
 	
@@ -44,26 +45,18 @@ public String create() {
 }
 	@PostMapping("/save")  
 	public String save (Producto producto, @RequestParam("img") MultipartFile file ) throws IOException {
-	LOGGER.info("Objeto de la vista {}",producto);
-	productoService.save(producto); 
+	LOGGER.info("Este es el Objeto producto {}",producto);
+//	productoService.save(producto); 
 	Usuario u= new Usuario (1,"","","","","","","");
 	producto.setUsuario(u);
 	
-	//imagen
-	if (producto.getId()==null) { //validacion cuando se crea un producto
-	String nombreImagen= upload.saveImage(file);	
+	// logica guardado de imagen
+	if (producto.getId()==null) { //validacxion cuando se crea una imagen
+	String nombreImagen= !file.isEmpty() ? upload.saveImage(file):"default.jpg";	
 	producto.setImagen(nombreImagen);
-	}else {
-		if (file.isEmpty()) { //Es cuando editamos el producto pero no cambiamos la imagen
-			Producto p= new Producto();
-			p=productoService.get(producto.getId()).get();
-			producto.setImagen(p.getImagen());
-		}else {
-	String nombreImagen= upload.saveImage(file);	
-	producto.setImagen(nombreImagen);
-		}
-	}
-	
+	}else { 
+  
+}		
 	productoService.save(producto);		
 	return"redirect:/productos";
 
@@ -81,18 +74,47 @@ public String create() {
 		
 		return "productos/edit";
 	}
-	
 	@PostMapping("/update")
-	public  String update(Producto productro) {
-		productoService.update(productro);
-		return "redirect:/productos";
-	}
-	//Agregamos mapeo para el direccionamiento
-	@GetMapping( "/delete/{id}")
-	//creamos un nuevo metodo publico con mapeo 
-   public String delete(@PathVariable Integer id) {
-	   productoService.delete(id);
-	   return"redirect:/productos";
-   }   
+	public String update(Producto producto, @RequestParam("img") MultipartFile file) throws IOException {
+		Producto p=new Producto();
+        p = productoService.get(producto.getId()).get();
+		//
+		
+		if (file.isEmpty()) { //Editamos el producto pero no cambiamos la imagen 
 
+	        String imagenExistente = p.getImagen();
+	        producto.setImagen(imagenExistente != null ? imagenExistente : "default.jpg");
+	    } else {  //cuando se edita tambien la imagen
+	        
+	        
+	        if (p.getImagen() != null && !p.getImagen().equals("default.jpg")) {
+	            upload.deleteImage(p.getImagen());
+	        }
+	        String nombreImagen = upload.saveImage(file);    
+	        producto.setImagen(nombreImagen);
+	    }
+	    producto.setUsuario(p.getUsuario());
+	    productoService.update(producto);
+	    return "redirect:/productos";
+	}
+	
+	
+
+	//Agregamos mapeo para el direccionamiento	
+	@GetMapping( "/delete/{id}")
+	//creamos un nuevo metodo publico con mapeo  
+	public String delete(@PathVariable Integer id) {
+	    
+		//creacion de variable tipo producto
+		Producto p = new Producto();
+	    p=productoService.get(id).get();
+	    
+	    // Eliminar cuando  no sea la imagen por defecto
+	    if (p.getImagen() != null && !p.getImagen().equals("default.jpg")) {
+	        upload.deleteImage(p.getImagen());
+	    }
+	    
+	    productoService.delete(id) ;
+	    return "redirect:/productos";
+	}
 }

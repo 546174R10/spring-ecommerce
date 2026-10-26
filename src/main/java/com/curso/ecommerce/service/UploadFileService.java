@@ -20,12 +20,12 @@ public class UploadFileService {
 public String saveImage(MultipartFile file) throws IOException {
 	File directory =new File (folder); 
 	  if (!directory.exists()) {
-	        directory.mkdirs(); // Crea la carpeta si no existe
+	        directory.mkdirs(); // Crea la carpeta si en dado caso no existiera
 	    }
 	    if (!file.isEmpty()) {
-	        byte[] bytes = file.getBytes();    
+	        byte[] bytes = file.getBytes(); //conversion de imagen a bytes    
 	        Path path = Paths.get(folder + file.getOriginalFilename());
-	        Files.write(path, bytes);
+	        Files.write(path, bytes); //ruta path
 	        return file.getOriginalFilename();
 	    }
 	return "default.jpg";
