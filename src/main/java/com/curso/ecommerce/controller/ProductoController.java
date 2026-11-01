@@ -86,7 +86,7 @@ public String create() {
 	        producto.setImagen(imagenExistente != null ? imagenExistente : "default.jpg");
 	    } else {  //cuando se edita tambien la imagen
 	        
-	        
+	        //eliminar cuando no sea la imagen por defecto
 	        if (p.getImagen() != null && !p.getImagen().equals("default.jpg")) {
 	            upload.deleteImage(p.getImagen());
 	        }
