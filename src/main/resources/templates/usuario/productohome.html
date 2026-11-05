@@ -52,7 +52,8 @@
               </a>
             </div>
             <div class="col-lg-6">
-              <form action="carrito.html" method="POST">
+				<!--apuntamos a homecontroller para direccionar a carrito-->
+              <form th:action="@{/cart}" method="POST">
 				<!--mandamos a llamar al nombre del controlador-->
                 <h2 class="card-title"th:text="${producto.nombre}"></h2>
 
@@ -87,7 +88,6 @@
 		
 		
 		</div>
-
 
 		<!-- Bootstrap core JavaScript -->
 		<!--agregamos "/" antes de vendor para reconocer la direccion de JavaScript-->
