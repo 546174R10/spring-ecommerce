@@ -54,6 +54,8 @@
             <div class="col-lg-6">
 				<!--apuntamos a homecontroller para direccionar a carrito-->
               <form th:action="@{/cart}" method="POST">
+				<!--añadimos un campo aculto-->
+				<input type="hiden" th:value="${producto.id}" name="id">
 				<!--mandamos a llamar al nombre del controlador-->
                 <h2 class="card-title"th:text="${producto.nombre}"></h2>
 
