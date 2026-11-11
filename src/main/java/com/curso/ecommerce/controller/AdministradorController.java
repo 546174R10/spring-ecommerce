@@ -15,8 +15,11 @@ import com.curso.ecommerce.service.ProductoService;
 @RequestMapping("/administrador")
 public class AdministradorController {
 
-	@Autowired
-	private ProductoService productoService;
+	private final ProductoService productoService;
+
+	public AdministradorController(ProductoService productoService) {
+		this.productoService = productoService;
+	}
 	
 	@GetMapping("")
 	public String home(Model model) {
