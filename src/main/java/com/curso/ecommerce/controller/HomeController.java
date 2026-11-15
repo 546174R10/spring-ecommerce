@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.curso.ecommerce.model.DetalleOrden;
 import com.curso.ecommerce.model.Orden;
 import com.curso.ecommerce.model.Producto;
+import com.curso.ecommerce.model.Usuario;
+import com.curso.ecommerce.service.IUsuarioService;
 import com.curso.ecommerce.service.ProductoService;
 
 @Controller
@@ -25,14 +27,21 @@ public class HomeController {
 
 	private final Logger log= LoggerFactory.getLogger(HomeController.class);
 	
-	@Autowired //le injecta el contenedor del framework
-	private ProductoService productoService;
+	//le injecta el contenedor del framework
+	private final ProductoService productoService;
 	
+    private final IUsuarioService usuarioService;
+
 	//para almacenar los detalles de la orden
 	List<DetalleOrden> detalles = new ArrayList<DetalleOrden>();
 	
 	//datos de la orde
 	Orden orden=new Orden();
+
+  HomeController(ProductoService productoService, IUsuarioService usuarioService) {
+    this.productoService = productoService;
+    this.usuarioService = usuarioService;
+  }
 	
 	//mapeo de usuario
 	@GetMapping("")
@@ -118,13 +127,22 @@ public class HomeController {
    }
     @GetMapping("/getCart")
     public String getCart(Model model) {
+    
         model.addAttribute("cart", detalles);
         model.addAttribute("orden", orden);
-    	return "/usuario/carrito";
+    
+        return "/usuario/carrito";
     
     } 
     @GetMapping("/order")
-    public String order() {
+    public String order(Model model) {
+
+        Usuario usuario = usuarioService.findById(1).get();
+
+        model.addAttribute("cart", detalles);
+        model.addAttribute("orden", orden);
+        model.addAttribute("usuario", usuario);
+
 return "usuario/resumenorden";
     }
     
